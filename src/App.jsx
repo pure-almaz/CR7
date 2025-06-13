@@ -149,7 +149,7 @@ function AppContent() {
             {sections.map((section) => (
               <li key={section.id}>
                 <a
-                  href={`#${section.id}`}
+                  href={getHref(section.id)}
                   className={
                     activeSection === section.id ? 'active-strike' : ''
                   }
