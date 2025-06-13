@@ -50,6 +50,12 @@ const heroCards = [
   },
 ];
 
+const getHref = (sectionId) => {
+  if (sectionId === "brands") return "brands";
+  if (sectionId === "museum") return "life-museum-hk";
+  return `#${sectionId}`;
+};
+
 function AppContent() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('cr7');
@@ -108,7 +114,7 @@ function AppContent() {
             {sections.map((section) => (
               <li key={section.id}>
                 <a
-                  href={`#${section.id}`}
+                  href={getHref(section.id)}
                   className={
                     activeSection === section.id ? 'active-strike' : ''
                   }
