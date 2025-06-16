@@ -6,7 +6,7 @@ import BrandsPage from './BrandsPage'
 
 const sections = [
   { id: 'cr7', label: 'CR7' },
-  { id: 'career', label: 'CAREER HIGHLIGHTS' },
+  { id: 'career-highlights', label: 'CAREER HIGHLIGHTS' },
   { id: 'brands', label: 'BRANDS' },
   { id: 'museum', label: 'LIFE MUSEUM' },
   { id: 'partners', label: 'PARTNERS' },
@@ -14,39 +14,48 @@ const sections = [
 
 const heroCards = [
   {
-    img: 'https://placehold.co/400x600?text=Highlight+1',
-    title: 'ERAKULIS APP',
-    subtitle: 'ERAKULIS',
-    desc: 'ERAKULIS® is an all-in-one wellness experience for Fitness, Nutrition and Mental Balance, founded by Cristiano Ronaldo.',
-    link: '#',
+    video: 'videos/highlights/CR7_WebsiteHighlights-Carrousel-2023-Vertical.mp4',
+    title: 'CAREER',
+    subtitle: 'HIGHLIGHTS',
+    desc: "Cristiano Ronaldo's highlights and achievements.",
+    action: "VIEW HIGHLIGHTS",
+    link: '#career-highlights',
   },
   {
-    img: 'https://placehold.co/400x600?text=Highlight+2',
-    title: 'HYDRATION',
+    img: 'images/highlights/brand_ursu.jpg',
+    title: 'URSU',
     subtitle: 'WATER',
-    desc: 'Stay hydrated and energized for peak performance.',
-    link: '#',
+    desc: 'URSU is much more than water... It is an inspiration to drink health and a lifestyle.',
+    action: "VIEW MORE",
+    link: 'https://ursu9.es/#origin',
   },
   {
-    img: 'https://placehold.co/400x600?text=Highlight+3',
-    title: 'LEGACY',
-    subtitle: 'CR7 FRAGRANCES',
-    desc: 'Define your own legacy with Cristiano Ronaldo fragrances.',
-    link: '#',
+    img: 'images/highlights/brand_erakulis.jpg',
+    title: 'ERAKULIS',
+    subtitle: 'APP',
+    desc: 'ERAKULIS® is an all-in-one wellness experience for Fitness, Nutrition and Mental Balance, founded by Cristiano Ronaldo.',
+    action: "VIEW MORE",
+    link: 'https://erakulis.com',
   },
   {
-    img: 'https://placehold.co/400x600?text=Highlight+4',
-    title: 'ATHLETICISM',
-    subtitle: 'TRAINING',
-    desc: 'Relentless drive and modern masculinity.',
-    link: '#',
+    img: 'images/highlights/brand_fragrances.jpg',
+    title: 'CR7',
+    subtitle: 'FRAGRANCES',
+    desc: "Define your own legacy with the NEW fragrances, Cristiano Ronaldo Legacy. A long-lasting woody aromatic amber scent, inspired by Ronaldo's relentless drive and modern masculinity, this fragrance is a testament to greatness.",
+    action: "SHOP NOW",
+    link: 'https://cr7fragrances.store/',
   },
   {
-    img: 'https://placehold.co/400x600?text=Highlight+5',
-    title: 'STYLE',
-    subtitle: 'FASHION',
-    desc: "Cristiano Ronaldo's unique style and confidence.",
-    link: '#',
+    img: 'images/highlights/brand_underwear.jpg',
+    title: 'CR7',
+    subtitle: 'UNDERWEAR',
+    desc: 'Working with quality materials and many years of experience producing underwear, the CR7 collection delivers a perfect unique fit.'
+  },
+  {
+    img: 'images/highlights/brand_footwear.jpg',
+    title: 'CR7',
+    subtitle: 'FOOTWEAR',
+    desc: "A new footwear line that further enriches the whole collection and interprets the style of the most demanding and eccentric man.",
   },
 ];
 
@@ -187,7 +196,15 @@ function AppContent() {
                 tabIndex={0}
                 onMouseLeave={() => setExpanded(0)}
               >
-                <img src={card.img} alt={card.title} />
+                {card.img ? <img src={card.img} alt={card.title} /> :
+                <video
+                  src={card.video}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+                }
                 {expanded === idx && (
                   <div className="cr7-hero-overlay">
                     <div className="cr7-hero-overlay-inner">
@@ -196,7 +213,7 @@ function AppContent() {
                         <span className="cr7-hero-overlay-app"> {card.subtitle ? <span className="cr7-hero-overlay-app">{card.subtitle}</span> : null}</span>
                       </div>
                       <div className="cr7-hero-overlay-desc">{card.desc}</div>
-                      <a href={card.link} className="cr7-hero-overlay-link">VIEW MORE <span>&rarr;</span></a>
+                      {card.action && <a href={card.link} className="cr7-hero-overlay-link">{card.action}<span>&rarr;</span></a>}
                     </div>
                   </div>
                 )}

@@ -402,7 +402,7 @@ body, .cr7-root {
   align-self: flex-end;
   max-height: 70vh;
 }
-.cr7-hero-card img {
+.cr7-hero-card img, .cr7-hero-card video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -426,7 +426,7 @@ body, .cr7-root {
   left: 0; right: 0; bottom: 0;
   width: 100%;
   min-height: 38%;
-  background: linear-gradient(0deg, rgba(0,0,0,0.92) 80%, rgba(0,0,0,0.2) 100%, transparent 100%);
+  background: transparent;
   color: #fff;
   display: flex;
   align-items: flex-end;
@@ -444,24 +444,22 @@ body, .cr7-root {
   justify-content: flex-end;
 }
 .cr7-hero-overlay-title {
-  font-size: 1.35rem;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   margin-bottom: 8px;
   text-shadow: 0 2px 8px #000a;
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 .cr7-hero-overlay-app {
   font-size: 1rem;
   font-weight: 600;
-  color: #ff4d00;
-  margin-left: 8px;
+  margin-left: 2px;
   letter-spacing: 1px;
 }
 .cr7-hero-overlay-desc {
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-weight: 400;
   margin-bottom: 18px;
   color: #fff;
@@ -470,7 +468,7 @@ body, .cr7-root {
 .cr7-hero-overlay-link {
   color: #fff;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 0.6rem;
   letter-spacing: 2px;
   text-decoration: none;
   border-bottom: 1.5px solid #fff;
