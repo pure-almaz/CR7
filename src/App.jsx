@@ -114,6 +114,8 @@ function AppContent() {
     setMenuOpen(false);
   };
 
+  //The landing page code
+
   return (
     <div className="cr7-root">
       {/* Header & Navigation */}
