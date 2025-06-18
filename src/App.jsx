@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LifeMuseumPage from './LifeMuseumPage'
 import BrandsPage from './BrandsPage'
+import CareerHighlightsCarousel from './CareerHighlightsCarousel'
 
 const sections = [
   { id: 'cr7', label: 'CR7' },
@@ -191,10 +192,10 @@ function AppContent() {
               <div
                 key={idx}
                 className={`cr7-hero-card${expanded === idx ? ' expanded' : ''}`}
-                onMouseEnter={() => setExpanded(idx)}
+                onMouseEnter={() => expanded !== idx && setExpanded(idx)}
                 onFocus={() => setExpanded(idx)}
                 tabIndex={0}
-                onMouseLeave={() => setExpanded(0)}
+                onMouseLeave={() => expanded === idx && setExpanded(0)}
               >
                 {card.img ? <img src={card.img} alt={card.title} /> :
                 <video
@@ -206,7 +207,7 @@ function AppContent() {
                 />
                 }
                 {expanded === idx && (
-                  <div className="cr7-hero-overlay">
+                  <div className="cr7-hero-overlay" style={{ pointerEvents: expanded === idx ? 'auto' : 'none' }}>
                     <div className="cr7-hero-overlay-inner">
                       <div className="cr7-hero-overlay-title">
                         <span className="cr7-bold">{card.title.split(' ')[0]}</span>{' '}{card.title.split(' ').slice(1).join(' ')}
@@ -227,45 +228,16 @@ function AppContent() {
 
         {/* Career Highlights Section */}
         <section
-          id="career"
-          className="cr7-section cr7-career"
-          ref={el => (sectionRefs.current['career'] = el)}
+          id="career-highlights"
+          className="cr7-section cr7-career-highlights-carousel"
+          ref={el => (sectionRefs.current['career-highlights'] = el)}
         >
-          <div className="cr7-career-img">
-            <img src="https://placehold.co/400x400?text=Career+Highlight" alt="Career" />
-          </div>
-          <div className="cr7-career-content">
-            <h2>
-              <span className="cr7-bold">CAREER</span> HIGHLIGHTS
-            </h2>
-            <p>Cristiano Ronaldo's highlights and achievements.</p>
-            <a href="#" className="cr7-view-link">VIEW HIGHLIGHTS →</a>
-          </div>
-        </section>
-
-        {/* Brands Section */}
-        <section
-          id="brands"
-          className="cr7-section cr7-brands"
-          ref={el => (sectionRefs.current['brands'] = el)}
-        >
-          <h2>
-            I WORK WITH BRANDS I <span className="cr7-bold">BELIEVE IN</span>
-          </h2>
-          <div className="cr7-brands-grid">
-            {Array.from({ length: 15 }).map((_, i) => (
-              <div className="cr7-brand-logo" key={i}>
-                <img src={`https://placehold.co/180x80?text=Brand+${i + 1}`} alt={`Brand ${i + 1}`} />
-              </div>
-            ))}
-          </div>
+          <CareerHighlightsCarousel />
         </section>
 
         {/* Newsletter Section */}
         <section
-          id="museum"
           className="cr7-section cr7-newsletter"
-          ref={el => (sectionRefs.current['museum'] = el)}
         >
           <h2>STAY TUNED</h2>
           <p>
