@@ -314,12 +314,36 @@ function AppContent() {
           className="cr7-section cr7-partners"
           ref={el => (sectionRefs.current['partners'] = el)}
         >
-          <div className="cr7-partners-grid">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div className="cr7-partner-logo" key={i}>
-                <img src={`https://placehold.co/160x60?text=Partner+${i + 1}`} alt={`Partner ${i + 1}`} />
-              </div>
-            ))}
+          <div className="cr7-partners-header">
+            I WORK WITH BRANDS I <span className="cr7-partners-header-highlight">BELIEVE</span> IN
+          </div>
+          <div className="cr7-partners-container">
+            <div className="cr7-partners-grid">
+              {[
+                'Logo_PestanaCR7.svg',
+                'Logo_7egend.svg',
+                'Logo_Insparya.png',
+                'Logo_Nike.svg',
+                'Logo_Zujugp.svg',
+                'Logo_Herbalife.svg',
+                'Logo_Clear.svg',
+                'Logo_Binance.svg',
+                'Logo_CR7CrunchFitness.svg',
+                'Logo_UFL.svg',
+                'Logo_DomumSeptem.svg',
+                'Logo_JacobCo.svg',
+                'Logo_Ursu.svg',
+                'Logo_Erakulis.svg',
+                'Logo_Whoop.svg',
+                'Logo_AVA.svg',
+                'Logo_SNK.svg',
+              ].map((filename) => (
+                <div className="cr7-partner-logo" key={filename}>
+                  <div className="cr7-partner-logo-overlay" />
+                  <img src={`/images/partners/${filename}`} alt={filename.replace(/Logo_|\.(svg|png)$/gi, '').replace(/([A-Z])/g, ' $1').trim()} />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </main>
