@@ -66,6 +66,57 @@ const getHref = (sectionId) => {
   return `#${sectionId}`;
 };
 
+function ErakulisFullScreenVideo() {
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef(null);
+
+  const handlePlay = () => {
+    setPlaying(true);
+    videoRef.current?.play();
+  };
+
+  const handlePause = () => {
+    setPlaying(false);
+    videoRef.current?.pause();
+  };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const onPause = () => setPlaying(false);
+    const onPlay = () => setPlaying(true);
+    video.addEventListener('pause', onPause);
+    video.addEventListener('play', onPlay);
+    return () => {
+      video.removeEventListener('pause', onPause);
+      video.removeEventListener('play', onPlay);
+    };
+  }, []);
+
+  return (
+    <section className="erakulis-fullscreen-video-section">
+      <video
+        ref={videoRef}
+        className="erakulis-fullscreen-video"
+        src="/videos/highlights/Erakulis_video_5Bitrate.mp4"
+        poster="/images/highlights/Erakulis_thumbnail.png"
+        playsInline
+        controls={false}
+        muted
+        tabIndex={-1}
+        style={{ pointerEvents: playing ? 'auto' : 'none' }}
+        onClick={handlePause}
+      />
+      {!playing && (
+        <button className="erakulis-play-btn" onClick={handlePlay} aria-label="Play video">
+          <span className="erakulis-pulse-circle" />
+          <span className="erakulis-play-icon">▶</span>
+        </button>
+      )}
+    </section>
+  );
+}
+
 function AppContent() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('cr7');
@@ -236,6 +287,9 @@ function AppContent() {
         >
           <CareerHighlightsCarousel />
         </section>
+
+        {/* Erakulis Fullscreen Video Section */}
+        <ErakulisFullScreenVideo />
 
         {/* Newsletter Section */}
         <section
