@@ -135,6 +135,20 @@ export default function LifeMuseumPage() {
           </div>
         </section>
 
+        {/* Banner 1 with Banner 2 Overlay */}
+        <div className="lm-banner1-container">
+          <img
+            src="/images/banner-1.jpg"
+            alt="Banner 1"
+            className="lm-banner1-img"
+          />
+          <img
+            src="/images/banner-2.png"
+            alt="Banner 2 Overlay"
+            className="lm-banner2-overlay-img"
+          />
+        </div>
+
         {/* Partners Section */}
         <section className="lm-partners">
           <h2 className="lm-partners-title">PARTNERS</h2>
