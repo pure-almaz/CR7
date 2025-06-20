@@ -9,9 +9,9 @@ const ticketLinks = [
 ];
 
 const visitOptions = [
-  { logo: 'https://placehold.co/80x40?text=Klook', label: 'klook', btn: 'GET TICKET' },
-  { logo: 'https://placehold.co/120x40?text=Trip.com', label: 'Trip.com Group', btn: 'GET TICKET' },
-  { logo: 'https://placehold.co/60x40?text=K11', label: 'K11', btn: 'GET TICKET' },
+  { logo: '/images/museum-partners/Logo_Klook.png', btn: 'GET TICKET' },
+  { logo: '/images/museum-partners/Logo_Trip.png', btn: 'GET TICKET' },
+  { logo: '/images/museum-partners/Logo_K11.png', btn: 'GET TICKET' },
 ];
 
 const whatsInside = [
@@ -81,6 +81,25 @@ export default function LifeMuseumPage() {
           </div>
         </section>
 
+        {/* Banner Image with Overlays */}
+        <div className="lm-banner-container">
+          {/* Top Overlay as Image */}
+          <img
+            src="/images/banner-logo.png"
+            alt="CR7 Life Museum Logo"
+            className="lm-banner-logo-img"
+          />
+          <img
+            src="/images/banner-background.jpg"
+            alt="CR7 Life Museum Banner"
+            className="lm-banner-img"
+          />
+          {/* Bottom Overlay */}
+          <div className="lm-banner-bottom-overlay">
+            <span className="lm-banner-bottom-text">"WITHOUT FOOTBALL,<br />MY LIFE IS WORTH NOTHING."</span>
+          </div>
+        </div>
+
         {/* Book Your Visit Section */}
         <section className="lm-book-visit">
           <h2 className="lm-book-title">BOOK YOUR VISIT</h2>
@@ -88,8 +107,7 @@ export default function LifeMuseumPage() {
           <div className="lm-book-options">
             {visitOptions.map((opt, i) => (
               <div className="lm-book-card" key={i}>
-                <img src={opt.logo} alt={opt.label} className="lm-book-logo" />
-                <div className="lm-book-label">{opt.label}</div>
+                <img src={opt.logo} alt="Museum Partner Logo" className="lm-book-logo" />
                 <a className="lm-book-btn" href="#">{opt.btn}</a>
               </div>
             ))}
