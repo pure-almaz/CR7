@@ -16,36 +16,36 @@ const visitOptions = [
 
 const whatsInside = [
   {
-    img: 'https://placehold.co/260x320?text=Trophies',
+    img: '/images/inside-museum/photo-trophies.jpg',
     title: 'TROPHIES',
     desc: 'See the highlighted trophies that I won by club and in individual.',
   },
   {
-    img: 'https://placehold.co/260x320?text=Timeline',
+    img: '/images/inside-museum/photo-timeline.jpg',
     title: 'LIFE & CAREER TIMELINE',
     desc: 'Walk through my journey and discover more about my story and career.',
   },
   {
-    img: 'https://placehold.co/260x320?text=Interactive',
+    img: '/images/inside-museum/photo-interactive-experience.jpg',
     title: 'INTERACTIVE EXPERIENCES',
     desc: 'You control the experience and the information.',
   },
   {
-    img: 'https://placehold.co/260x320?text=Immersive',
+    img: '/images/inside-museum/photo-immersive-journey.jpg',
     title: 'IMMERSIVE JOURNEY',
     desc: 'Step into the places and the experiences that marked my career and life.',
   },
   {
-    img: 'https://placehold.co/260x320?text=UR7+Studio',
+    img: '/images/inside-museum/photo-youtube-studio.jpg',
     title: 'UR7 YOUTUBE STUDIO',
     desc: 'Take a photo at my UR7 youtube studio.',
   },
 ];
 
 const partners = [
-  { logo: 'https://placehold.co/80x40?text=Klook', label: 'klook' },
-  { logo: 'https://placehold.co/120x40?text=Trip.com', label: 'Trip.com Group' },
-  { logo: 'https://placehold.co/60x40?text=K11', label: 'K11' },
+  { logo: '/images/museum-partners/Logo_Klook.png', label: 'klook' },
+  { logo: '/images/museum-partners/Logo_Trip.png', label: 'Trip.com Group' },
+  { logo: '/images/museum-partners/Logo_K11.png', label: 'K11' },
 ];
 
 export default function LifeMuseumPage() {
@@ -63,7 +63,7 @@ export default function LifeMuseumPage() {
         <section className="lm-hero">
           <video
             className="lm-hero-video"
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            src="/videos/CR7SignatureMuseum_header.mp4"
             autoPlay
             loop
             muted
