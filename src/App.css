@@ -350,12 +350,12 @@ html, body, #root, .cr7-root {
 }
 .cr7-partner-logo {
   position: relative;
-  aspect-ratio: 5/2;
+  aspect-ratio: 5/5;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 120px;
-  min-width: 0;
+  min-width: 120px;
   background: none;
   box-sizing: border-box;
   /* Only inner borders */
@@ -724,10 +724,7 @@ html, body, #root, .cr7-root {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
-  .cr7-brand-logo img, .cr7-partner-logo img {
-    width: 90px;
-    height: 32px;
-  }
+
   .cr7-footer {
     flex-direction: column;
     gap: 8px;
@@ -846,7 +843,7 @@ html, body, #root, .cr7-root {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: left;
   max-width: 900px;
   margin-left: 7vw;
 }
@@ -1134,7 +1131,7 @@ html, body, #root, .cr7-root {
   left: 0;
   width: 100vw;
   z-index: 100;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0);
   display: flex;
   align-items: center;
   justify-content: space-between;
