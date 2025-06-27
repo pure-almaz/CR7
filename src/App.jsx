@@ -8,7 +8,7 @@ import CareerHighlightsCarousel from './CareerHighlightsCarousel'
 const sections = [
   { id: 'cr7', label: 'CR7' },
   { id: 'career-highlights', label: 'CAREER HIGHLIGHTS' },
-  { id: 'brands', label: 'BRANDS' },
+  // { id: 'brands', label: 'BRANDS' },
   { id: 'museum', label: 'LIFE MUSEUM' },
   { id: 'partners', label: 'PARTNERS' },
 ];
@@ -369,8 +369,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<AppContent />} />
         <Route path="/life-museum-hk" element={<LifeMuseumPage />} />
-        <Route path="/brands" element={<BrandsPage />} />
+        
       </Routes>
     </Router>
   );
 }
+
+//<Route path="/brands" element={<BrandsPage />} />
