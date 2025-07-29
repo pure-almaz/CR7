@@ -223,11 +223,11 @@ function AppContent() {
               </li>
             ))}
           </ul>
-          <div className="cr7-mobile-social">
+          {/*<div className="cr7-mobile-social">
             <a href="#" aria-label="Instagram">&#xf16d;</a>
             <a href="#" aria-label="Facebook">&#xf09a;</a>
             <a href="#" aria-label="Twitter">&#xf099;</a>
-          </div>
+          </div> */}
           <a href="#" className="cr7-privacy-link">PRIVACY POLICY</a>
         </div>
       )}
@@ -353,11 +353,11 @@ function AppContent() {
         <a href="#" className="cr7-privacy-link">Privacy Policy</a>
         <span>© Cristiano Ronaldo, All Rights Reserved</span>
         <span className="cr7-powered">POWERED BY 7EGEND</span>
-        <div className="cr7-footer-social">
+        {/*<div className="cr7-footer-social">
           <a href="#" aria-label="Instagram">&#xf16d;</a>
           <a href="#" aria-label="Facebook">&#xf09a;</a>
           <a href="#" aria-label="Twitter">&#xf099;</a>
-        </div>
+        </div>*/}
       </footer>
     </div>
   )
