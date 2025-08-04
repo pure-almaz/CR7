@@ -2526,3 +2526,78 @@ html, body, #root, .cr7-root {
     font-size: 1rem;
   }
 }
+
+.currency-selector {
+  background: rgba(250, 248, 248, 0.1);
+  color: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-left: auto;
+}
+
+.error-message {
+  color: #ff6b6b;
+  text-align: center;
+  margin: -16px 0 16px 0;
+}
+
+.payment-info-content {
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.payment-address {
+  background: rgba(255,255,255,0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
+  word-break: break-all;
+  display: inline-block;
+  margin: 8px 0;
+}
+
+.qr-code-container {
+  margin: 24px 0;
+  padding: 16px;
+  background: #fff;
+  display: inline-block;
+  border-radius: 8px;
+}
+
+.payment-status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-waiting { color: #f1c40f; }
+.status-confirming { color: #3498db; }
+.status-confirmed { color: #2ecc71; }
+.status-sending { color: #2ecc71; }
+.status-finished { color: #27ae60; }
+.status-failed { color: #e74c3c; }
+
+.payment-note {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-top: 16px;
+}
+.success-popup-content {
+  padding: 32px;
+  text-align: center;
+}
+
+.success-popup-content h3 {
+  font-size: 1.5rem;
+  color: #d6ff1c;
+  margin-bottom: 16px;
+}
+
+.success-popup-content p {
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}

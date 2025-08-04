@@ -1,5 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import NowPaymentsApi from '@nowpaymentsio/nowpayments-api-js';
+import {QRCodeSVG} from 'qrcode.react';
 import './App.css';
 
 const ticketLinks = [
@@ -17,27 +19,27 @@ const visitOptions = [
 const ticketOptions = [
   {
     name: 'Standard',
-    price: 24.45,
+    price: 240.45,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
   },
   {
     name: 'Duo Ticket (2 Adults)',
-    price: 27.38,
+    price: 270.38,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
   },
   {
     name: 'Duo Concession Ticket (2 Child/ Senior)',
-    price: 39.78,
+    price: 390.78,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
   },
   {
     name: 'Duo Ticket and Concession Ticket (2 Adults + 1 Child/ Senior)',
-    price: 66.57,
+    price: 660.57,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
   },
   {
     name: '1 Adult & 1 Concession (Child/Senior)',
-    price: 43.59,
+    price: 430.59,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
   }
 ];
@@ -76,11 +78,83 @@ const partners = [
   { logo: '/images/museum-partners/Logo_K11.png', label: 'K11' },
 ];
 
-function TicketPopup({ isOpen, onClose, brand }) {
+function SuccessPopup({ isOpen, onClose, brand }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="ticket-popup-overlay" onClick={onClose}>
+      <div className="ticket-popup" onClick={(e) => e.stopPropagation()}>
+        <button className="ticket-popup-close" onClick={onClose}>×</button>
+        <div className="ticket-popup-header">
+          <img 
+            src={`/images/museum-partners/Logo_${brand === 'Trip.com' ? 'Trip' : brand}.png`} 
+            alt={`${brand} Logo`} 
+            className="ticket-popup-logo"
+          />
+          <h2>Payment Successful!</h2>
+        </div>
+        <div className="success-popup-content">
+          <h3>Thank You for your purchase!</h3>
+          <p>Your payment has been confirmed.</p>
+          <p>You will receive your ticket from <strong>{brand}</strong> within 24 hours via email.</p>
+          <p>Please check your spam folder if you do not see it in your inbox.</p>
+          <button className="lm-hero-btn" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('crypto');
+  const [npApi, setNpApi] = useState(null);
+  const [availableCurrencies, setAvailableCurrencies] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState('usdttrc20');
+  const [paymentInfo, setPaymentInfo] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      const api = new NowPaymentsApi({ apiKey: import.meta.env.VITE_NOWPAYMENTS_API_KEY });
+      setNpApi(api);
+      
+      const fetchCurrencies = async () => {
+        try {
+          const { currencies } = await api.getCurrencies();
+          setAvailableCurrencies(currencies);
+        } catch (e) {
+          setError('Could not fetch currencies.');
+          console.error(e);
+        }
+      };
+      fetchCurrencies();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (paymentInfo && paymentInfo.payment_id) {
+      const interval = setInterval(async () => {
+        try {
+          const status = await npApi.getPaymentStatus({ payment_id: paymentInfo.payment_id });
+          setPaymentStatus(status.payment_status);
+          if (['finished', 'confirmed', 'sending'].includes(status.payment_status)) {
+            clearInterval(interval);
+            onPaymentSuccess();
+          }
+        } catch (e) {
+          console.error("Error checking payment status:", e);
+        }
+      }, 5000); // Check every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [paymentInfo, npApi, onPaymentSuccess]);
+
 
   if (!isOpen) return null;
 
@@ -88,13 +162,53 @@ function TicketPopup({ isOpen, onClose, brand }) {
   const today = new Date().toISOString().split('T')[0];
   const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (paymentMethod === 'crypto') {
-      // Handle crypto payment
-      alert('Redirecting to crypto payment...');
+    if (paymentMethod === 'crypto' && npApi) {
+        setIsLoading(true);
+        setError(null);
+        setPaymentInfo(null);
+        try {
+            const payment = await npApi.createPayment({
+                price_amount: totalPrice,
+                price_currency: 'usd',
+                pay_currency: selectedCurrency,
+                order_id: `CR7MUSEUM-${Date.now()}`,
+                order_description: `${ticketOptions[selectedTicket].name} x${quantity}`
+            });
+            setPaymentInfo(payment);
+        } catch (e) {
+            setError('Payment creation failed. Please try again.');
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
     }
   };
+
+  if (paymentInfo) {
+    return (
+      <div className="ticket-popup-overlay" onClick={onClose}>
+        <div className="ticket-popup" onClick={(e) => e.stopPropagation()}>
+          <button className="ticket-popup-close" onClick={onClose}>×</button>
+          <div className="ticket-popup-header">
+            <h2>Complete Your Payment</h2>
+          </div>
+          <div className="payment-info-content">
+            <p>Please send exactly</p>
+            <h3>{paymentInfo.pay_amount} {paymentInfo.pay_currency.toUpperCase()}</h3>
+            <p>to the address below:</p>
+            <strong className="payment-address">{paymentInfo.pay_address}</strong>
+            <div className="qr-code-container">
+              <QRCodeSVG value={paymentInfo.pay_address} size={180} />
+            </div>
+            <p>Status: <span className={`payment-status status-${paymentStatus}`}>{paymentStatus || 'waiting'}</span></p>
+            <p className="payment-note">Do not close this window until the payment is confirmed.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="ticket-popup-overlay" onClick={onClose}>
@@ -111,6 +225,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
         </div>
 
         <form onSubmit={handleSubmit} className="ticket-popup-form">
+          {/* Ticket Type Selection */}
           <div className="ticket-popup-section">
             <h3>Select Ticket Type</h3>
             <div className="ticket-options">
@@ -136,6 +251,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
             </div>
           </div>
 
+          {/* Date Selection */}
           <div className="ticket-popup-section">
             <h3>Select Date</h3>
             <input
@@ -149,6 +265,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
             />
           </div>
 
+          {/* Quantity */}
           <div className="ticket-popup-section">
             <h3>Quantity</h3>
             <div className="quantity-selector">
@@ -170,29 +287,41 @@ function TicketPopup({ isOpen, onClose, brand }) {
             </div>
           </div>
 
+          {/* Payment Method */}
           <div className="ticket-popup-section">
             <h3>Payment Method</h3>
             <div className="payment-methods">
               <div className="payment-method">
                 <input
                   type="radio"
+                  id="crypto-payment"
                   name="paymentMethod"
                   value="crypto"
                   checked={paymentMethod === 'crypto'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                <label>Pay With Crypto</label>
+                <label htmlFor="crypto-payment">Pay With Crypto</label>
+                {paymentMethod === 'crypto' && (
+                  <select 
+                    className="currency-selector" 
+                    value={selectedCurrency} 
+                    onChange={(e) => setSelectedCurrency(e.target.value)}
+                  >
+                    {availableCurrencies.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
+                  </select>
+                )}
               </div>
               <div className="payment-method disabled">
                 <input
                   type="radio"
+                  id="card-payment"
                   name="paymentMethod"
                   value="card"
                   checked={paymentMethod === 'card'}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   disabled
                 />
-                <label>Pay With Card</label>
+                <label htmlFor="card-payment">Pay With Card</label>
                 <p className="maintenance-notice">Card payment is currently undergoing maintenance. Only crypto payment is currently supported.</p>
               </div>
             </div>
@@ -201,13 +330,15 @@ function TicketPopup({ isOpen, onClose, brand }) {
           <div className="ticket-popup-total">
             <h3>Total: ${totalPrice.toFixed(2)} USD</h3>
           </div>
+          
+          {error && <p className="error-message">{error}</p>}
 
           <button 
             type="submit" 
             className="ticket-popup-submit"
-            disabled={!selectedDate || paymentMethod === 'card'}
+            disabled={!selectedDate || paymentMethod === 'card' || isLoading}
           >
-            {paymentMethod === 'crypto' ? 'Pay with Crypto' : 'Pay with Card (Disabled)'}
+            {isLoading ? 'Processing...' : 'Proceed to Payment'}
           </button>
         </form>
 
@@ -235,22 +366,27 @@ export default function LifeMuseumPage() {
   const navigate = useNavigate();
   const insideCardsRef = useRef(null);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [successPopupOpen, setSuccessPopupOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState('');
 
   const handleTicketClick = (brand) => {
     setSelectedBrand(brand);
     setPopupOpen(true);
   };
+  
+  const handlePaymentSuccess = () => {
+    setPopupOpen(false);
+    setSuccessPopupOpen(true);
+  };
 
   return (
     <div className="lm-root">
-      {/* Transparent Nav Bar */}
+      {/* ... nav and hero ... */}
       <nav className="lm-navbar">
         <div className="cr7-logo">CRISTIANO RONALDO</div>
         <button className="lm-close-btn" aria-label="Close" onClick={() => navigate('/')}>×</button>
       </nav>
       <main>
-        {/* Hero Section */}
         <section className="lm-hero">
           <video
             className="lm-hero-video"
@@ -278,9 +414,8 @@ export default function LifeMuseumPage() {
           </div>
         </section>
 
-        {/* Banner Image with Overlays */}
+        {/* ... rest of the page ... */}
         <div className="lm-banner-container">
-          {/* Top Overlay as Image */}
           <img
             src="/images/banner-logo.png"
             alt="CR7 Life Museum Logo"
@@ -291,13 +426,11 @@ export default function LifeMuseumPage() {
             alt="CR7 Life Museum Banner"
             className="lm-banner-img"
           />
-          {/* Bottom Overlay */}
           <div className="lm-banner-bottom-overlay">
             <span className="lm-banner-bottom-text">"WITHOUT FOOTBALL,<br />MY LIFE IS WORTH NOTHING."</span>
           </div>
         </div>
 
-        {/* Book Your Visit Section */}
         <section className="lm-book-visit">
           <h2 className="lm-book-title">BOOK YOUR VISIT</h2>
           <p className="lm-book-desc">Visit my exclusive <b>CR7 Life Museum at K11, Hong Kong</b></p>
@@ -316,7 +449,6 @@ export default function LifeMuseumPage() {
           </div>
         </section>
 
-        {/* What's Inside Section */}
         <section className="lm-inside">
           <h2 className="lm-inside-title">WHAT'S INSIDE?</h2>
           <p className="lm-inside-desc">
@@ -337,7 +469,6 @@ export default function LifeMuseumPage() {
           </div>
         </section>
 
-        {/* Banner 1 with Banner 2 Overlay */}
         <div className="lm-banner1-container">
           <img
             src="/images/banner-1.jpg"
@@ -351,7 +482,6 @@ export default function LifeMuseumPage() {
           />
         </div>
 
-        {/* Partners Section */}
         <section className="lm-partners">
           <h2 className="lm-partners-title">PARTNERS</h2>
           <div className="lm-partners-logos">
@@ -366,6 +496,14 @@ export default function LifeMuseumPage() {
       <TicketPopup 
         isOpen={popupOpen} 
         onClose={() => setPopupOpen(false)} 
+        brand={selectedBrand}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
+
+      {/* Success Popup */}
+      <SuccessPopup 
+        isOpen={successPopupOpen} 
+        onClose={() => setSuccessPopupOpen(false)} 
         brand={selectedBrand}
       />
     </div>
