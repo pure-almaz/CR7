@@ -78,7 +78,7 @@ const partners = [
   { logo: '/images/museum-partners/Logo_K11.png', label: 'K11' },
 ];
 
-function SuccessPopup({ isOpen, onClose, brand }) {
+function SuccessPopup({ isOpen, onClose, brand, email }) {
   if (!isOpen) return null;
 
   return (
@@ -96,7 +96,7 @@ function SuccessPopup({ isOpen, onClose, brand }) {
         <div className="success-popup-content">
           <h3>Thank You for your purchase!</h3>
           <p>Your payment has been confirmed.</p>
-          <p>You will receive your ticket from <strong>{brand}</strong> within 24 hours via email.</p>
+          <p>Your ticket will be sent to your recorded email <strong>{email}</strong> from <strong>{brand}</strong> within 24 hours.</p>
           <p>Please check your spam folder if you do not see it in your inbox.</p>
           <button className="lm-hero-btn" onClick={onClose}>Close</button>
         </div>
@@ -109,6 +109,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [email, setEmail] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('crypto');
   const [npApi, setNpApi] = useState(null);
   const [availableCurrencies, setAvailableCurrencies] = useState([]);
@@ -144,7 +145,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
           setPaymentStatus(status.payment_status);
           if (['finished', 'confirmed', 'sending'].includes(status.payment_status)) {
             clearInterval(interval);
-            onPaymentSuccess();
+            onPaymentSuccess(email);
           }
         } catch (e) {
           console.error("Error checking payment status:", e);
@@ -153,7 +154,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
 
       return () => clearInterval(interval);
     }
-  }, [paymentInfo, npApi, onPaymentSuccess]);
+  }, [paymentInfo, npApi, onPaymentSuccess, email]);
 
 
   if (!isOpen) return null;
@@ -174,7 +175,8 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
                 price_currency: 'usd',
                 pay_currency: selectedCurrency,
                 order_id: `CR7MUSEUM-${Date.now()}`,
-                order_description: `${ticketOptions[selectedTicket].name} x${quantity}`
+                order_description: `${ticketOptions[selectedTicket].name} x${quantity}`,
+                payer_email: email,
             });
             setPaymentInfo(payment);
         } catch (e) {
@@ -287,6 +289,20 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
             </div>
           </div>
 
+          {/* Email */}
+          <div className="ticket-popup-section">
+            <h3>Email Address</h3>
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                required
+                className="email-input"
+            />
+            <p className="email-note">Your e-ticket will be sent to this address.</p>
+          </div>
+
           {/* Payment Method */}
           <div className="ticket-popup-section">
             <h3>Payment Method</h3>
@@ -336,7 +352,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
           <button 
             type="submit" 
             className="ticket-popup-submit"
-            disabled={!selectedDate || paymentMethod === 'card' || isLoading}
+            disabled={!selectedDate || !email || paymentMethod === 'card' || isLoading}
           >
             {isLoading ? 'Processing...' : 'Proceed to Payment'}
           </button>
@@ -368,15 +384,17 @@ export default function LifeMuseumPage() {
   const [popupOpen, setPopupOpen] = useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState('');
+  const [userEmail, setUserEmail] = useState('');
 
   const handleTicketClick = (brand) => {
     setSelectedBrand(brand);
     setPopupOpen(true);
   };
   
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = (email) => {
     setPopupOpen(false);
     setSuccessPopupOpen(true);
+    setUserEmail(email);
   };
 
   return (
@@ -505,7 +523,8 @@ export default function LifeMuseumPage() {
         isOpen={successPopupOpen} 
         onClose={() => setSuccessPopupOpen(false)} 
         brand={selectedBrand}
+        email={userEmail}
       />
     </div>
   );
-} 
+}
