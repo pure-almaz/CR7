@@ -205,7 +205,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
           </div>
           <div className="payment-info-content">
             <p>Please send exactly</p>
-            <h3>{paymentInfo.pay_amount} {paymentInfo.pay_currency.toUpperCase()}</h3>
+            <h3>{paymentInfo.pay_amount} {paymentInfo?.pay_currency?.toUpperCase()}</h3>
             <p>to the address below:</p>
             <strong className="payment-address">{paymentInfo.pay_address}</strong>
             <div className="qr-code-container">
