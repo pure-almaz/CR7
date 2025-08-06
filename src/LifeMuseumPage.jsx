@@ -124,6 +124,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -196,6 +197,13 @@ function TicketPopup({ isOpen, onClose, brand }) {
   };
 
   if (paymentInfo) {
+    const handleCopy = () => {
+      if (paymentInfo.pay_address) {
+        navigator.clipboard.writeText(paymentInfo.pay_address);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }
+    };
     return (
       <div className="ticket-popup-overlay" onClick={onClose}>
         <div className="ticket-popup" onClick={(e) => e.stopPropagation()}>
@@ -207,7 +215,26 @@ function TicketPopup({ isOpen, onClose, brand }) {
             <p>Please send exactly</p>
             <h3>{paymentInfo.pay_amount} {paymentInfo?.pay_currency?.toUpperCase()}</h3>
             <p>to the address below:</p>
-            <strong className="payment-address">{paymentInfo.pay_address}</strong>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <strong className="payment-address">{paymentInfo.pay_address}</strong>
+              <button
+                type="button"
+                onClick={handleCopy}
+                style={{
+                  background: '#d6ff1c',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: 4,
+                  padding: '4px 10px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                }}
+                aria-label="Copy address to clipboard"
+              >
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
             <div className="qr-code-container">
               <QRCodeSVG value={paymentInfo.pay_address} size={180} />
             </div>
