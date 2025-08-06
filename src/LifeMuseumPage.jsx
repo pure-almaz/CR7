@@ -44,7 +44,7 @@ const ticketOptions = [
   },
   {
     name: 'Promo',
-    price: 7.00,
+    price: 15.00,
     description: 'Special promotional ticket. No cancellation, Valid on the selected date, Instant confirmation'
   }
 ];
