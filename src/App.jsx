@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LifeMuseumPage from './LifeMuseumPage'
 import BrandsPage from './BrandsPage'
 import CareerHighlightsCarousel from './CareerHighlightsCarousel'
+import SuccessPage from './SuccessPage';
 
 const sections = [
   { id: 'cr7', label: 'CR7' },
@@ -369,6 +370,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<AppContent />} />
         <Route path="/life-museum-hk" element={<LifeMuseumPage />} />
+        <Route path="/success" element={<SuccessPage />} />
         
       </Routes>
     </Router>

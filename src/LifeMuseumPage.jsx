@@ -41,6 +41,11 @@ const ticketOptions = [
     name: '1 Adult & 1 Concession (Child/Senior)',
     price: 430.59,
     description: 'No cancellation, Valid on the selected date, Instant confirmation'
+  },
+  {
+    name: 'Promo',
+    price: 7.00,
+    description: 'Special promotional ticket. No cancellation, Valid on the selected date, Instant confirmation'
   }
 ];
 
@@ -105,7 +110,7 @@ function SuccessPopup({ isOpen, onClose, brand, email }) {
   );
 }
 
-function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
+function TicketPopup({ isOpen, onClose, brand }) {
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -118,6 +123,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -145,7 +151,8 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
           setPaymentStatus(status.payment_status);
           if (['finished', 'confirmed', 'sending'].includes(status.payment_status)) {
             clearInterval(interval);
-            onPaymentSuccess(email);
+            // Navigate to /success with details
+            navigate('/success', { state: { email, brand } });
           }
         } catch (e) {
           console.error("Error checking payment status:", e);
@@ -154,7 +161,7 @@ function TicketPopup({ isOpen, onClose, brand, onPaymentSuccess }) {
 
       return () => clearInterval(interval);
     }
-  }, [paymentInfo, npApi, onPaymentSuccess, email]);
+  }, [paymentInfo, npApi, email, brand, navigate]);
 
 
   if (!isOpen) return null;
@@ -382,19 +389,11 @@ export default function LifeMuseumPage() {
   const navigate = useNavigate();
   const insideCardsRef = useRef(null);
   const [popupOpen, setPopupOpen] = useState(false);
-  const [successPopupOpen, setSuccessPopupOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState('');
-  const [userEmail, setUserEmail] = useState('');
 
   const handleTicketClick = (brand) => {
     setSelectedBrand(brand);
     setPopupOpen(true);
-  };
-  
-  const handlePaymentSuccess = (email) => {
-    setPopupOpen(false);
-    setSuccessPopupOpen(true);
-    setUserEmail(email);
   };
 
   return (
@@ -515,15 +514,6 @@ export default function LifeMuseumPage() {
         isOpen={popupOpen} 
         onClose={() => setPopupOpen(false)} 
         brand={selectedBrand}
-        onPaymentSuccess={handlePaymentSuccess}
-      />
-
-      {/* Success Popup */}
-      <SuccessPopup 
-        isOpen={successPopupOpen} 
-        onClose={() => setSuccessPopupOpen(false)} 
-        brand={selectedBrand}
-        email={userEmail}
       />
     </div>
   );
