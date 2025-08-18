@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function SuccessPage() {
@@ -6,6 +6,15 @@ export default function SuccessPage() {
   const navigate = useNavigate();
   // Details may be passed via location.state
   const details = location.state || { email: 'test@example.com', brand: 'Klook' };
+
+  // Fire Google Analytics conversion event when page loads
+  useEffect(() => {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'ads_conversion_Purchase_1', {
+        // Add any additional event parameters here if needed
+      });
+    }
+  }, []);
 
   return (
     <div className="ticket-popup-overlay" style={{ minHeight: '100vh' }}>

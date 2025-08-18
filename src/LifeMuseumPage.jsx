@@ -4,6 +4,25 @@ import NowPaymentsApi from '@nowpaymentsio/nowpayments-api-js';
 import {QRCodeSVG} from 'qrcode.react';
 import './App.css';
 
+// Google Analytics helper function for delayed navigation
+function gtagSendEvent(url) {
+  var callback = function () {
+    if (typeof url === 'string') {
+      window.location = url;
+    }
+  };
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'ads_conversion_Purchase_1', {
+      'event_callback': callback,
+      'event_timeout': 2000,
+    });
+  } else {
+    // Fallback if gtag is not available
+    callback();
+  }
+  return false;
+}
+
 const ticketLinks = [
   { label: 'GET TICKET WITH KLOOK', brand: 'Klook' },
   { label: 'GET TICKET WITH TRIP.COM', brand: 'Trip.com' },
@@ -148,8 +167,12 @@ function TicketPopup({ isOpen, onClose, brand }) {
           setPaymentStatus(status.payment_status);
           if (['finished', 'confirmed', 'sending'].includes(status.payment_status)) {
             clearInterval(interval);
-            // Navigate to /success with details
-            navigate('/success', { state: { email, brand } });
+            // Fire Google Analytics event and navigate to success page
+            gtagSendEvent('/success');
+            // Fallback navigation in case gtag fails
+            setTimeout(() => {
+              navigate('/success', { state: { email, brand } });
+            }, 100);
           }
         } catch (e) {
           console.error("Error checking payment status:", e);
