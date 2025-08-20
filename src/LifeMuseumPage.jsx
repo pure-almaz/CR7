@@ -153,6 +153,8 @@ function TicketPopup({ isOpen, onClose, brand }) {
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card'); // Default to card
+  const [cardDisabled, setCardDisabled] = useState(false);
+  const [cardDisableMsg, setCardDisableMsg] = useState('');
   const [npApi, setNpApi] = useState(null);
   const [availableCurrencies, setAvailableCurrencies] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState('usdttrc20');
@@ -198,9 +200,22 @@ function TicketPopup({ isOpen, onClose, brand }) {
     }
   }, [paymentInfo, npApi, email, brand, navigate]);
 
+    const totalPrice = ticketOptions[selectedTicket].price * quantity;
+
+  useEffect(() => {
+    // Only check for totalPrice > 1000
+    if (totalPrice > 1000) {
+      setCardDisabled(true);
+      setPaymentMethod('crypto');
+      setCardDisableMsg('Amount exceeding 1000 USD can only be paid via crypto. Please contact us using the WhatsApp button below if you don\'t know how to pay with crypto.');
+    } else {
+      setCardDisabled(false);
+      setCardDisableMsg('');
+    }
+  }, [totalPrice]);
+
   if (!isOpen) return null;
 
-  const totalPrice = ticketOptions[selectedTicket].price * quantity;
   const today = new Date().toISOString().split('T')[0];
   const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
@@ -320,12 +335,30 @@ function TicketPopup({ isOpen, onClose, brand }) {
           <div className="ticket-popup-section">
             <h3>Payment Method</h3>
             <div className="payment-methods">
-              <div className="payment-method">
-                <input type="radio" id="card-payment" name="paymentMethod" value="card" checked={paymentMethod === 'card'} onChange={(e) => setPaymentMethod(e.target.value)} />
+              <div className={`payment-method${cardDisabled ? ' disabled' : ''}`}> 
+                <input 
+                  type="radio" 
+                  id="card-payment" 
+                  name="paymentMethod" 
+                  value="card" 
+                  checked={paymentMethod === 'card'} 
+                  onChange={(e) => setPaymentMethod(e.target.value)} 
+                  disabled={cardDisabled}
+                />
                 <label htmlFor="card-payment">Pay With Card</label>
+                {cardDisabled && (
+                  <p className="card-disable-msg" style={{color: 'red', fontWeight: 500}}>{cardDisableMsg}</p>
+                )}
               </div>
               <div className="payment-method">
-                <input type="radio" id="crypto-payment" name="paymentMethod" value="crypto" checked={paymentMethod === 'crypto'} onChange={(e) => setPaymentMethod(e.target.value)} />
+                <input 
+                  type="radio" 
+                  id="crypto-payment" 
+                  name="paymentMethod" 
+                  value="crypto" 
+                  checked={paymentMethod === 'crypto'} 
+                  onChange={(e) => setPaymentMethod(e.target.value)} 
+                />
                 <label htmlFor="crypto-payment">Pay With Crypto</label>
                 {paymentMethod === 'crypto' && (
                   <select className="currency-selector" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
