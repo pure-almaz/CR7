@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import FomoPopup from './FomoPopup';
 import { useNavigate } from 'react-router-dom';
 import NowPaymentsApi from '@nowpaymentsio/nowpayments-api-js';
 import {QRCodeSVG} from 'qrcode.react';
@@ -148,10 +149,23 @@ function SuccessPopup({ isOpen, onClose, brand, email }) {
 
 
 function TicketPopup({ isOpen, onClose, brand }) {
+  // ...existing code...
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState('');
+  // Validation error state for live feedback
+  const [validationError, setValidationError] = useState("");
+
+  useEffect(() => {
+    if (!selectedDate) {
+      setValidationError("Please select a date.");
+    } else if (!email) {
+      setValidationError("Please enter your email address.");
+    } else {
+      setValidationError("");
+    }
+  }, [selectedDate, email]);
   const [paymentMethod, setPaymentMethod] = useState('card'); // Default to card
   const [cardDisabled, setCardDisabled] = useState(false);
   const [cardDisableMsg, setCardDisableMsg] = useState('');
@@ -164,6 +178,10 @@ function TicketPopup({ isOpen, onClose, brand }) {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const emailRef = useRef();
+  const dateRef = useRef();
+  // Accept fomoDiscount prop
+  const fomoDiscount = arguments[0]?.fomoDiscount;
 
   useEffect(() => {
     if (isOpen) {
@@ -200,7 +218,9 @@ function TicketPopup({ isOpen, onClose, brand }) {
     }
   }, [paymentInfo, npApi, email, brand, navigate]);
 
-    const totalPrice = ticketOptions[selectedTicket].price * quantity;
+  const basePrice = ticketOptions[selectedTicket].price * quantity;
+  const discount = fomoDiscount ? 0.1 : 0;
+  const totalPrice = basePrice * (1 - discount);
 
   useEffect(() => {
     // Only check for totalPrice > 1000
@@ -223,6 +243,18 @@ function TicketPopup({ isOpen, onClose, brand }) {
     e.preventDefault();
     setError(null);
     setPaymentInfo(null);
+
+    // Error handling for missing fields
+    if (!selectedDate) {
+      setError('Please select a date.');
+      dateRef.current?.focus();
+      return;
+    }
+    if (!email) {
+      setError('Please enter your email address.');
+      emailRef.current?.focus();
+      return;
+    }
 
     if (paymentMethod === 'card') {
       makePayment({ amount: totalPrice, email, brand });
@@ -312,7 +344,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
           <div className="ticket-popup-section">
             <h3>Select Date</h3>
             <div className="date-input-container">
-              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} min={today} max={maxDate} required className="date-input" placeholder="Select visit date" />
+              <input ref={dateRef} type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} min={today} max={maxDate} required className="date-input" placeholder="Select visit date" />
             </div>
             <p className="date-note">Select your preferred visit date</p>
           </div>
@@ -328,7 +360,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
           {/* Email */}
           <div className="ticket-popup-section">
             <h3>Email Address</h3>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@example.com" required className="email-input" />
+            <input ref={emailRef} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@example.com" required className="email-input" />
             <p className="email-note">Your e-ticket will be sent to this address.</p>
           </div>
           {/* Payment Method */}
@@ -369,10 +401,20 @@ function TicketPopup({ isOpen, onClose, brand }) {
             </div>
           </div>
           <div className="ticket-popup-total">
-            <h3>Total: ${totalPrice.toFixed(2)} USD</h3>
+            {fomoDiscount ? (
+              <>
+                <h3>Total: <span style={{textDecoration:'line-through', color:'#888'}}>${basePrice.toFixed(2)}</span> <span style={{color:'#d6ff1c', fontWeight:700}}>${totalPrice.toFixed(2)}</span> USD</h3>
+                <p style={{color:'#d6ff1c', fontWeight:600}}>Exclusive 10% Discount Applied!</p>
+              </>
+            ) : (
+              <h3>Total: ${totalPrice.toFixed(2)} USD</h3>
+            )}
           </div>
+          {validationError && (
+            <p className="error-message" style={{color:'red',marginBottom:'10px'}}>{validationError}</p>
+          )}
           {error && <p className="error-message">{error}</p>}
-          <button type="submit" className="ticket-popup-submit" disabled={!selectedDate || !email || isLoading}>
+          <button type="submit" className="ticket-popup-submit" disabled={isLoading}>
             {isLoading ? 'Processing...' : 'Proceed to Payment'}
           </button>
                     {/* WhatsApp Help Section */}
@@ -402,14 +444,31 @@ export default function LifeMuseumPage() {
   const insideCardsRef = useRef(null);
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState('');
+  const [fomoOpen, setFomoOpen] = useState(false);
+  const [fomoDiscountActive, setFomoDiscountActive] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFomoOpen(true), 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleTicketClick = (brand) => {
     setSelectedBrand(brand);
     setPopupOpen(true);
+    setFomoDiscountActive(false);
+  };
+
+  const handleFomoGetTicket = (brand) => {
+    setFomoOpen(false);
+    setSelectedBrand(brand);
+    setPopupOpen(true);
+    setFomoDiscountActive(true);
   };
 
   return (
     <div className="lm-root">
+      {/* FOMO Popup */}
+      <FomoPopup open={fomoOpen} onClose={() => setFomoOpen(false)} onGetTicket={handleFomoGetTicket} />
       {/* ... nav and hero ... */}
       <nav className="lm-navbar">
         <div className="cr7-logo">CRISTIANO RONALDO</div>
@@ -524,8 +583,9 @@ export default function LifeMuseumPage() {
       {/* Ticket Popup */}
       <TicketPopup 
         isOpen={popupOpen} 
-        onClose={() => setPopupOpen(false)} 
+        onClose={() => { setPopupOpen(false); setFomoDiscountActive(false); }} 
         brand={selectedBrand}
+        fomoDiscount={fomoDiscountActive}
       />
     </div>
   );
