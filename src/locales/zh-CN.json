@@ -1,0 +1,22 @@
+{
+  "fomo.title": "剩余门票有限！",
+  "fomo.message": "快来！CR7生活博物馆仅剩{{count}}张门票。立即预订，享受独家体验。",
+  "fomo.button": "立即购票",
+  "fomo.exclusive": "专属",
+  "fomo.sellingFast": "门票热销中！",
+  "fomo.limitedEdition": "限量版！",
+  "fomo.availableTickets": "剩余门票：",
+  "ticket.title": "通过{{brand}}获取门票",
+  "ticket.selectType": "选择门票类型",
+  "ticket.selectDate": "选择日期",
+  "ticket.quantity": "数量",
+  "ticket.email": "电子邮箱",
+  "ticket.paymentMethod": "支付方式",
+  "ticket.payWithCard": "银行卡支付",
+  "ticket.payWithCrypto": "加密货币支付",
+  "ticket.total": "总计: ${{price}} 美元",
+  "ticket.discount": "专属9折优惠！",
+  "ticket.error.date": "请选择日期。",
+  "ticket.error.email": "请输入您的电子邮箱。",
+  "ticket.button": "继续支付"
+}

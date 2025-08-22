@@ -1,0 +1,22 @@
+{
+  "fomo.title": "남은 티켓이 얼마 남지 않았습니다!",
+  "fomo.message": "서두르세요! CR7 라이프 뮤지엄 티켓이 {{count}}장만 남았습니다. 지금 예약하고 특별한 경험을 누리세요.",
+  "fomo.button": "티켓 구매하기",
+  "fomo.exclusive": "독점",
+  "fomo.sellingFast": "티켓이 빠르게 판매되고 있습니다!",
+  "fomo.limitedEdition": "한정판!",
+  "fomo.availableTickets": "남은 티켓:",
+  "ticket.title": "{{brand}}로 티켓 받기",
+  "ticket.selectType": "티켓 종류 선택",
+  "ticket.selectDate": "날짜 선택",
+  "ticket.quantity": "수량",
+  "ticket.email": "이메일 주소",
+  "ticket.paymentMethod": "결제 방법",
+  "ticket.payWithCard": "카드로 결제",
+  "ticket.payWithCrypto": "암호화폐로 결제",
+  "ticket.total": "총액: ${{price}} USD",
+  "ticket.discount": "10% 특별 할인 적용!",
+  "ticket.error.date": "날짜를 선택하세요.",
+  "ticket.error.email": "이메일 주소를 입력하세요.",
+  "ticket.button": "결제 진행"
+}

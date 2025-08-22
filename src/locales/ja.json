@@ -1,0 +1,22 @@
+{
+  "fomo.title": "残りわずかのチケット！",
+  "fomo.message": "急いでください！CR7ライフミュージアムのチケットは残り{{count}}枚です。今すぐ予約して、特別な体験をお楽しみください。",
+  "fomo.button": "チケットを購入",
+  "fomo.exclusive": "限定",
+  "fomo.sellingFast": "チケットは急速に売れています！",
+  "fomo.limitedEdition": "限定版！",
+  "fomo.availableTickets": "残りチケット：",
+  "ticket.title": "{{brand}}でチケットを入手",
+  "ticket.selectType": "チケットタイプを選択",
+  "ticket.selectDate": "日付を選択",
+  "ticket.quantity": "数量",
+  "ticket.email": "メールアドレス",
+  "ticket.paymentMethod": "支払い方法",
+  "ticket.payWithCard": "カードで支払う",
+  "ticket.payWithCrypto": "暗号通貨で支払う",
+  "ticket.total": "合計: ${{price}} USD",
+  "ticket.discount": "限定10%割引！",
+  "ticket.error.date": "日付を選択してください。",
+  "ticket.error.email": "メールアドレスを入力してください。",
+  "ticket.button": "支払いに進む"
+}

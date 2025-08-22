@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './FomoPopup.css';
 
 const packages = ['Standard', 'VIP', 'Gold', 'Platinum', 'Reserve'];
@@ -12,6 +12,7 @@ function getRandomInt(min, max) {
 
 
 export default function FomoPopup({ open, onClose, onGetTicket }) {
+  const { t, i18n } = useTranslation();
   // Single digit between 7 and 15, then multiply by 10 for 70-150
   const [tickets, setTickets] = useState(() => getRandomInt(7, 15) * 10);
   const [fomoMsg, setFomoMsg] = useState('');
@@ -47,17 +48,17 @@ export default function FomoPopup({ open, onClose, onGetTicket }) {
           {/* X button at top right */}
           <button className="fomo-x-btn" onClick={() => setShowWarning(true)} aria-label="Close popup">×</button>
           {/* Large GET 10% OFF button */}
-          <button className="fomo-get-discount-btn">GET 10% OFF MY HK MUSEUM TICKET</button>
+          <button className="fomo-get-discount-btn">{t('fomo.button')}</button>
           <div className="fomo-popup-header">
-            <span className="fomo-exclusive">Exclusive</span>
-            <span className="fomo-title">Ticket sales for Cristiano Ronaldo’s Hong Kong</span>
+            <span className="fomo-exclusive">{t('fomo.exclusive')}</span>
+            <span className="fomo-title">{t('fomo.title')}</span>
           </div>
           <div className="fomo-popup-sub">
-            <span className="fomo-discount">Get <span className="fomo-discount-highlight">10% Off Now!</span></span>
-            <span className="fomo-limited">Ticket selling Out Fast! <span className="fomo-limited-highlight">Limited Edition!</span></span>
+            <span className="fomo-discount">{t('fomo.sellingFast')}</span>
+            <span className="fomo-limited">{t('fomo.limitedEdition')}</span>
           </div>
           <div className="fomo-tickets-row">
-            <span className="fomo-tickets-label">Available Tickets:</span>
+            <span className="fomo-tickets-label">{t('fomo.availableTickets')}</span>
             <span className="fomo-tickets-count">{tickets}</span>
           </div>
           <div className="fomo-message">
@@ -65,7 +66,7 @@ export default function FomoPopup({ open, onClose, onGetTicket }) {
           </div>
           {/* GET TICKET NOW button */}
           <button className="fomo-get-ticket-btn" onClick={() => onGetTicket && onGetTicket('Klook')}>
-            GET TICKET NOW!
+            {t('fomo.button')}
           </button>
           {showWarning && (
             <div className="fomo-warning">
@@ -74,6 +75,16 @@ export default function FomoPopup({ open, onClose, onGetTicket }) {
               <button className="fomo-warning-back" onClick={() => setShowWarning(false)}>Go Back</button>
             </div>
           )}
+          {/* Language Switcher */}
+          <div style={{marginTop:16}}>
+            <select value={i18n.language} onChange={e => i18n.changeLanguage(e.target.value)}>
+              <option value="en">English</option>
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

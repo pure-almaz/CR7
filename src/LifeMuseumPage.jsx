@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import FomoPopup from './FomoPopup';
 import { useNavigate } from 'react-router-dom';
 import NowPaymentsApi from '@nowpaymentsio/nowpayments-api-js';
@@ -37,31 +38,11 @@ const visitOptions = [
 ];
 
 const ticketOptions = [
-  {
-    name: 'Standard',
-    price: 24.45,
-    description: 'General entry to the CR7 Museum with access to all permanent exhibits celebrating Cristiano Ronaldo’s career.'
-  },
-  {
-    name: 'VIP',
-    price: 270.38,
-    description: 'Includes general entry plus a guided tour by a museum host, priority entry, and access to an exclusive photo area. Complimentary souvenir included.'
-  },
-  {
-    name: 'Gold',
-    price: 567.78,
-    description: 'Enjoy all VIP benefits plus access to the private CR7 memorabilia collection, a personalized guided tour, and a signed replica photo.'
-  },
-  {
-    name: 'Platinum',
-    price: 999.57,
-    description: 'Full CR7 experience: All Gold benefits plus a private lounge visit, premium gift pack, and a personalized video greeting from Cristiano Ronaldo (subject to availability).'
-  },
-  {
-    name: 'Reserve',
-    price: 2199.99,
-    description: 'Reserved entry with flexible time slot on your chosen day, VIP seating for museum presentations, and complimentary refreshments.'
-  }
+  { name: 'Standard', price: 24.45, description: 'General entry to the CR7 Museum with access to all permanent exhibits celebrating Cristiano Ronaldo’s career.' },
+  { name: 'VIP', price: 270.38, description: 'Includes general entry plus a guided tour by a museum host, priority entry, and access to an exclusive photo area. Complimentary souvenir included.' },
+  { name: 'Gold', price: 567.78, description: 'Enjoy all VIP benefits plus access to the private CR7 memorabilia collection, a personalized guided tour, and a signed replica photo.' },
+  { name: 'Platinum', price: 999.57, description: 'Full CR7 experience: All Gold benefits plus a private lounge visit, premium gift pack, and a personalized video greeting from Cristiano Ronaldo (subject to availability).' },
+  { name: 'Reserve', price: 2199.99, description: 'Reserved entry with flexible time slot on your chosen day, VIP seating for museum presentations, and complimentary refreshments.' },
 ];
 
 
@@ -149,7 +130,7 @@ function SuccessPopup({ isOpen, onClose, brand, email }) {
 
 
 function TicketPopup({ isOpen, onClose, brand }) {
-  // ...existing code...
+  const { t, i18n } = useTranslation();
   const [selectedTicket, setSelectedTicket] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -159,13 +140,13 @@ function TicketPopup({ isOpen, onClose, brand }) {
 
   useEffect(() => {
     if (!selectedDate) {
-      setValidationError("Please select a date.");
+      setValidationError(t('ticket.error.date'));
     } else if (!email) {
-      setValidationError("Please enter your email address.");
+      setValidationError(t('ticket.error.email'));
     } else {
       setValidationError("");
     }
-  }, [selectedDate, email]);
+  }, [selectedDate, email, t]);
   const [paymentMethod, setPaymentMethod] = useState('card'); // Default to card
   const [cardDisabled, setCardDisabled] = useState(false);
   const [cardDisableMsg, setCardDisableMsg] = useState('');
@@ -321,12 +302,12 @@ function TicketPopup({ isOpen, onClose, brand }) {
         <button className="ticket-popup-close" onClick={onClose}>×</button>
         <div className="ticket-popup-header">
           <img src={`/images/museum-partners/Logo_${brand === 'Trip.com' ? 'Trip' : brand}.png`} alt={`${brand} Logo`} className="ticket-popup-logo" />
-          <h2>Get Your Ticket with {brand}</h2>
+          <h2>{t('ticket.title', { brand })}</h2>
         </div>
         <form onSubmit={handleSubmit} className="ticket-popup-form">
           {/* Ticket Type Selection */}
           <div className="ticket-popup-section">
-            <h3>Select Ticket Type</h3>
+            <h3>{t('ticket.selectType')}</h3>
             <div className="ticket-options">
               {ticketOptions.map((ticket, index) => (
                 <div key={index} className={`ticket-option ${selectedTicket === index ? 'selected' : ''}`} onClick={() => setSelectedTicket(index)}>
@@ -335,22 +316,22 @@ function TicketPopup({ isOpen, onClose, brand }) {
                     <span className="ticket-name">{ticket.name}</span>
                     <span className="ticket-price">${ticket.price.toLocaleString()}</span>
                   </div>
-                  <p className="ticket-description">{ticket.description}</p>
+                  <p className="ticket-description">{t(`ticket.desc`, { defaultValue: ticket.description })}</p>
                 </div>
               ))}
             </div>
           </div>
           {/* Date Selection */}
           <div className="ticket-popup-section">
-            <h3>Select Date</h3>
+            <h3>{t('ticket.selectDate')}</h3>
             <div className="date-input-container">
               <input ref={dateRef} type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} min={today} max={maxDate} required className="date-input" placeholder="Select visit date" />
             </div>
-            <p className="date-note">Select your preferred visit date</p>
+            <p className="date-note">{t('ticket.dateNote', { defaultValue: 'Select your preferred visit date' })}</p>
           </div>
           {/* Quantity */}
           <div className="ticket-popup-section">
-            <h3>Quantity</h3>
+            <h3>{t('ticket.quantity')}</h3>
             <div className="quantity-selector">
               <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="quantity-btn">-</button>
               <span className="quantity-display">{quantity}</span>
@@ -359,13 +340,13 @@ function TicketPopup({ isOpen, onClose, brand }) {
           </div>
           {/* Email */}
           <div className="ticket-popup-section">
-            <h3>Email Address</h3>
+            <h3>{t('ticket.email')}</h3>
             <input ref={emailRef} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your.email@example.com" required className="email-input" />
-            <p className="email-note">Your e-ticket will be sent to this address.</p>
+            <p className="email-note">{t('ticket.emailNote', { defaultValue: 'Your e-ticket will be sent to this address.' })}</p>
           </div>
           {/* Payment Method */}
           <div className="ticket-popup-section">
-            <h3>Payment Method</h3>
+            <h3>{t('ticket.paymentMethod')}</h3>
             <div className="payment-methods">
               <div className={`payment-method${cardDisabled ? ' disabled' : ''}`}> 
                 <input 
@@ -377,7 +358,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
                   onChange={(e) => setPaymentMethod(e.target.value)} 
                   disabled={cardDisabled}
                 />
-                <label htmlFor="card-payment">Pay With Card</label>
+                <label htmlFor="card-payment">{t('ticket.payWithCard')}</label>
                 {cardDisabled && (
                   <p className="card-disable-msg" style={{color: 'red', fontWeight: 500}}>{cardDisableMsg}</p>
                 )}
@@ -391,7 +372,7 @@ function TicketPopup({ isOpen, onClose, brand }) {
                   checked={paymentMethod === 'crypto'} 
                   onChange={(e) => setPaymentMethod(e.target.value)} 
                 />
-                <label htmlFor="crypto-payment">Pay With Crypto</label>
+                <label htmlFor="crypto-payment">{t('ticket.payWithCrypto')}</label>
                 {paymentMethod === 'crypto' && (
                   <select className="currency-selector" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
                     {availableCurrencies.map(c => <option key={c} value={c}>{c.toUpperCase()}</option>)}
@@ -403,11 +384,11 @@ function TicketPopup({ isOpen, onClose, brand }) {
           <div className="ticket-popup-total">
             {fomoDiscount ? (
               <>
-                <h3>Total: <span style={{textDecoration:'line-through', color:'#888'}}>${basePrice.toFixed(2)}</span> <span style={{color:'#d6ff1c', fontWeight:700}}>${totalPrice.toFixed(2)}</span> USD</h3>
-                <p style={{color:'#d6ff1c', fontWeight:600}}>Exclusive 10% Discount Applied!</p>
+                <h3>{t('ticket.total', { price: basePrice.toFixed(2) })} <span style={{textDecoration:'line-through', color:'#888'}}>${basePrice.toFixed(2)}</span> <span style={{color:'#d6ff1c', fontWeight:700}}>${totalPrice.toFixed(2)}</span> USD</h3>
+                <p style={{color:'#d6ff1c', fontWeight:600}}>{t('ticket.discount')}</p>
               </>
             ) : (
-              <h3>Total: ${totalPrice.toFixed(2)} USD</h3>
+              <h3>{t('ticket.total', { price: totalPrice.toFixed(2) })}</h3>
             )}
           </div>
           {validationError && (
@@ -415,18 +396,28 @@ function TicketPopup({ isOpen, onClose, brand }) {
           )}
           {error && <p className="error-message">{error}</p>}
           <button type="submit" className="ticket-popup-submit" disabled={isLoading}>
-            {isLoading ? 'Processing...' : 'Proceed to Payment'}
+            {isLoading ? 'Processing...' : t('ticket.button')}
           </button>
+          {/* Language Switcher */}
+          <div style={{marginTop:16}}>
+            <select value={i18n.language} onChange={e => i18n.changeLanguage(e.target.value)}>
+              <option value="en">English</option>
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+            </select>
+          </div>
                     {/* WhatsApp Help Section */}
           <div className="whatsapp-help-section">
             <div className="whatsapp-help-content">
               <div className="whatsapp-help-text">
-                <p>Do you need help completing your purchase?</p>
-                <p><strong>Chat with us on WhatsApp</strong></p>
+                <p>{t('ticket.help', { defaultValue: 'Do you need help completing your purchase?' })}</p>
+                <p><strong>{t('ticket.whatsapp', { defaultValue: 'Chat with us on WhatsApp' })}</strong></p>
               </div>
               <a href="https://wa.me/15632011430" target="_blank" rel="noopener noreferrer" className="whatsapp-help-button">
                 {/* ...SVG... */}
-                Chat Now
+                {t('ticket.chatNow', { defaultValue: 'Chat Now' })}
               </a>
             </div>
           </div>

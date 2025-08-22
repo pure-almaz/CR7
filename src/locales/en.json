@@ -1,0 +1,22 @@
+{
+  "fomo.title": "Limited Tickets Left!",
+  "fomo.message": "Hurry! Only {{count}} tickets remain for the CR7 Life Museum. Secure your spot now and enjoy an exclusive experience.",
+  "fomo.button": "Get Your Ticket",
+  "fomo.exclusive": "Exclusive",
+  "fomo.sellingFast": "Ticket selling Out Fast!",
+  "fomo.limitedEdition": "Limited Edition!",
+  "fomo.availableTickets": "Available Tickets:",
+  "ticket.title": "Get Your Ticket with {{brand}}",
+  "ticket.selectType": "Select Ticket Type",
+  "ticket.selectDate": "Select Date",
+  "ticket.quantity": "Quantity",
+  "ticket.email": "Email Address",
+  "ticket.paymentMethod": "Payment Method",
+  "ticket.payWithCard": "Pay With Card",
+  "ticket.payWithCrypto": "Pay With Crypto",
+  "ticket.total": "Total: ${{price}} USD",
+  "ticket.discount": "Exclusive 10% Discount Applied!",
+  "ticket.error.date": "Please select a date.",
+  "ticket.error.email": "Please enter your email address.",
+  "ticket.button": "Proceed to Payment"
+}
