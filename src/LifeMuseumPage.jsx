@@ -85,7 +85,7 @@ const partners = [
 function makePayment({ amount, email, brand }) {
   const tx_ref = `CR7MUSEUM-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
   window.FlutterwaveCheckout({
-    public_key: 'FLWPUBK-1f4d012a463f4b32e461cc00ef66b310-X',
+    public_key: 'FLWPUBK-9f81191e76c5478fdfe1dedaf8646e32-X', //main = FLWPUBK-1f4d012a463f4b32e461cc00ef66b310-X
     tx_ref,
     amount,
     currency: 'USD',
