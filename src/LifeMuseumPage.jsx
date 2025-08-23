@@ -208,12 +208,12 @@ function TicketPopup({ isOpen, onClose, brand }) {
     if (totalPrice > 1000) {
       setCardDisabled(true);
       setPaymentMethod('crypto');
-      setCardDisableMsg('Amount exceeding 1000 USD can only be paid via crypto. Please contact us using the WhatsApp button below if you don\'t know how to pay with crypto.');
+      setCardDisableMsg(t('crypto.amountNote', 'Amount exceeding 1000 USD can only be paid via crypto. Please contact us using the WhatsApp button below if you don\'t know how to pay with crypto.'));
     } else {
       setCardDisabled(false);
       setCardDisableMsg('');
     }
-  }, [totalPrice]);
+  }, [totalPrice, t]);
 
   if (!isOpen) return null;
 
@@ -275,21 +275,21 @@ function TicketPopup({ isOpen, onClose, brand }) {
         <div className="ticket-popup" onClick={(e) => e.stopPropagation()}>
           <button className="ticket-popup-close" onClick={onClose}>×</button>
           <div className="ticket-popup-header">
-            <h2>Complete Your Payment</h2>
+            <h2>{t('ticket.completePayment', 'Complete Your Payment')}</h2>
           </div>
           <div className="payment-info-content">
-            <p>Please send exactly</p>
+            <p>{t('crypto.sendExactly', 'Please send exactly')}</p>
             <h3>{paymentInfo.pay_amount} {paymentInfo?.pay_currency?.toUpperCase()}</h3>
-            <p>to the address below:</p>
+            <p>{t('crypto.toAddress', 'to the address below')}:</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <strong className="payment-address">{paymentInfo.pay_address}</strong>
-              <button type="button" onClick={handleCopy} style={{ background: '#d6ff1c', color: '#000', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }} aria-label="Copy address to clipboard">{copied ? 'Copied!' : 'Copy'}</button>
+              <button type="button" onClick={handleCopy} style={{ background: '#d6ff1c', color: '#000', border: 'none', borderRadius: 4, padding: '4px 10px', fontWeight: 600, cursor: 'pointer', fontSize: '0.95rem' }} aria-label="Copy address to clipboard">{copied ? t('crypto.copied', 'Copied!') : t('crypto.copy', 'Copy')}</button>
             </div>
             <div className="qr-code-container">
               <QRCodeSVG value={paymentInfo.pay_address} size={180} />
             </div>
-            <p>Status: <span className={`payment-status status-${paymentStatus}`}>{paymentStatus || 'waiting'}</span></p>
-            <p className="payment-note">Do not close this window until the payment is confirmed.</p>
+            <p>{t('crypto.status', 'Status:')} <span className={`payment-status status-${paymentStatus}`}>{paymentStatus || t('crypto.waiting', 'waiting')}</span></p>
+            <p className="payment-note">{t('crypto.doNotClose', 'Do not close this window until the payment is confirmed.')}</p>
           </div>
         </div>
       </div>
@@ -316,7 +316,9 @@ function TicketPopup({ isOpen, onClose, brand }) {
                     <span className="ticket-name">{ticket.name}</span>
                     <span className="ticket-price">${ticket.price.toLocaleString()}</span>
                   </div>
-                  <p className="ticket-description">{t(`ticket.desc`, { defaultValue: ticket.description })}</p>
+                  <p className="ticket-description">
+                    {t(`ticket.desc.${ticket.name.toLowerCase()}`, { defaultValue: ticket.description })}
+                  </p>
                 </div>
               ))}
             </div>

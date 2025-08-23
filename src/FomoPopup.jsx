@@ -47,32 +47,49 @@ export default function FomoPopup({ open, onClose, onGetTicket }) {
         <div className="fomo-popup-content">
           {/* X button at top right */}
           <button className="fomo-x-btn" onClick={() => setShowWarning(true)} aria-label="Close popup">×</button>
-          {/* Large GET 10% OFF button */}
-          <button className="fomo-get-discount-btn">{t('fomo.button')}</button>
           <div className="fomo-popup-header">
-            <span className="fomo-exclusive">{t('fomo.exclusive')}</span>
-            <span className="fomo-title">{t('fomo.title')}</span>
+            <span className="fomo-exclusive">{t('fomo.exclusive', { defaultValue: 'Exclusive' })}</span>
+            <span className="fomo-title">{t('fomo.title', { defaultValue: "Ticket sales for Cristiano Ronaldo’s Hong Kong" })}</span>
+          </div>
+          <div className="fomo-popup-headline" style={{
+  fontSize: '2.3rem',
+  fontWeight: 900,
+  color: '#fff',
+  background: 'linear-gradient(90deg, #d6ff1c 0%, #fff700 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  textAlign: 'center',
+  margin: '0 auto 22px auto',
+  padding: '12px 0',
+  borderRadius: '16px',
+  border: '3px solid #d6ff1c',
+  boxShadow: '0 4px 24px #0006',
+  letterSpacing: '1.5px',
+  fontFamily: 'Montserrat, Arial Black, Arial, sans-serif',
+  maxWidth: '90%',
+}}>
+            {t('fomo.headline', { defaultValue: 'Visit Me Live in My Hong Kong Museum!' })}
           </div>
           <div className="fomo-popup-sub">
-            <span className="fomo-discount">{t('fomo.sellingFast')}</span>
-            <span className="fomo-limited">{t('fomo.limitedEdition')}</span>
+            <span className="fomo-discount">{t('fomo.discount', { defaultValue: 'Get' })} <span className="fomo-discount-highlight">{t('fomo.discountHighlight', { defaultValue: '10% Off Now!' })}</span></span>
+            <span className="fomo-limited">{t('fomo.sellingFast', { defaultValue: 'Ticket selling Out Fast!' })} <span className="fomo-limited-highlight">{t('fomo.limitedEdition', { defaultValue: 'Limited Edition!' })}</span></span>
           </div>
           <div className="fomo-tickets-row">
-            <span className="fomo-tickets-label">{t('fomo.availableTickets')}</span>
+            <span className="fomo-tickets-label">{t('fomo.availableTickets', { defaultValue: 'Available Tickets:' })}</span>
             <span className="fomo-tickets-count">{tickets}</span>
           </div>
           <div className="fomo-message">
-            {fomoMsg}
+            {t('fomo.recentPurchase', { email: fomoMsg.split(' just bought a ')[0], ticket: fomoMsg.split(' just bought a ')[1]?.replace(' ticket', ''), defaultValue: fomoMsg })}
           </div>
           {/* GET TICKET NOW button */}
           <button className="fomo-get-ticket-btn" onClick={() => onGetTicket && onGetTicket('Klook')}>
-            {t('fomo.button')}
+            {t('fomo.getTicketNow', { defaultValue: 'GET TICKET NOW!' })}
           </button>
           {showWarning && (
             <div className="fomo-warning">
-              <span>You will lose your 10% discount if you close now!</span>
-              <button className="fomo-warning-close" onClick={onClose}>Close Anyway</button>
-              <button className="fomo-warning-back" onClick={() => setShowWarning(false)}>Go Back</button>
+              <span>{t('fomo.warning', { defaultValue: 'You will lose your 10% discount if you close now!' })}</span>
+              <button className="fomo-warning-close" onClick={onClose}>{t('fomo.closeAnyway', { defaultValue: 'Close Anyway' })}</button>
+              <button className="fomo-warning-back" onClick={() => setShowWarning(false)}>{t('fomo.goBack', { defaultValue: 'Go Back' })}</button>
             </div>
           )}
           {/* Language Switcher */}
